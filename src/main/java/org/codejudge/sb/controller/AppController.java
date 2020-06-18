@@ -6,6 +6,8 @@ import org.codejudge.sb.dto.ErrorResponseDto;
 import org.codejudge.sb.dto.MarkModel;
 import org.codejudge.sb.model.Lead;
 import org.codejudge.sb.service.LeadService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +21,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/")
+@Slf4j
 public class AppController {
+
+	Logger logger = LoggerFactory.getLogger(AppController.class);
 
 	@ApiOperation("This is the hello world api")
 	@GetMapping("/hello")
@@ -45,6 +51,7 @@ public class AppController {
 				return new ResponseEntity<>(new Lead(), HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
+			logger.error(e.toString());
 			ErrorResponseDto erd = new ErrorResponseDto("failure", "reason");
 			return new ResponseEntity<>(erd, HttpStatus.BAD_REQUEST);
 		}
@@ -52,8 +59,9 @@ public class AppController {
 
 	@PostMapping("/api/leads/")
 	public ResponseEntity<Object> saveLead(@Valid @RequestBody Lead lead) {
-		if ( lead.getEmail().equals("") || leadService.checkEmailAlreadyPresent(lead.getEmail())) {
-			ErrorResponseDto erd = new ErrorResponseDto("failure", "reason");
+		logger.debug("saving lead "+ lead.toString());
+		if (lead.getEmail().equals("") || leadService.checkEmailAlreadyPresent(lead.getEmail())) {
+			ErrorResponseDto erd = new ErrorResponseDto("failure", "email error");
 			return new ResponseEntity<>(erd, HttpStatus.BAD_REQUEST);
 		}
 		Lead lead2 = leadService.saveLead(lead);
@@ -75,6 +83,7 @@ public class AppController {
 			ErrorResponseDto erd = new ErrorResponseDto("sucesss");
 			return new ResponseEntity<>(erd, HttpStatus.ACCEPTED);
 		} catch (Exception e) {
+			logger.error(e.toString());
 			ErrorResponseDto erd = new ErrorResponseDto("failure", "reason");
 			return new ResponseEntity<>(erd, HttpStatus.BAD_REQUEST);
 		}
@@ -88,6 +97,7 @@ public class AppController {
 			ErrorResponseDto erd = new ErrorResponseDto("sucesss");
 			return new ResponseEntity<>(erd, HttpStatus.OK);
 		} catch (Exception e) {
+			logger.error(e.toString());
 			ErrorResponseDto erd = new ErrorResponseDto("failure", "reason");
 			return new ResponseEntity<>(erd, HttpStatus.BAD_REQUEST);
 		}
@@ -103,6 +113,7 @@ public class AppController {
 			erd.setCommunication(markModel.getCommunication());
 			return new ResponseEntity<>(erd, HttpStatus.ACCEPTED);
 		} catch (Exception e) {
+			logger.error(e.toString());
 			ErrorResponseDto erd = new ErrorResponseDto("failure", "reason");
 			return new ResponseEntity<>(erd, HttpStatus.BAD_REQUEST);
 		}

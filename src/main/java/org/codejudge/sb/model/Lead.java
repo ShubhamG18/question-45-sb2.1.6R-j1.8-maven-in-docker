@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.springframework.beans.factory.annotation.Required;
 
@@ -37,10 +38,11 @@ public class Lead {
 
 	@NotNull
 	@Column
+	@Size(min = 10, max = 10)
 	private Long mobile;
 
 	@Column
-	//@Email
+	// @Email
 	@NotNull
 	private String email;
 
@@ -59,5 +61,12 @@ public class Lead {
 
 	@Column
 	private String communication;
+
+	@Override
+	public String toString() {
+		return "Lead [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", mobile=" + mobile
+				+ ", email=" + email + ", locationType=" + locationType + ", locationString=" + locationString
+				+ ", status=" + status + ", communication=" + communication + "]";
+	}
 
 }
