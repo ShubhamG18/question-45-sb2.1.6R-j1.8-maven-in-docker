@@ -33,9 +33,10 @@ public class AppController {
 	@Autowired
 	private LeadService leadService;
 
-	@GetMapping("/api/leads/{id}")
-	public ResponseEntity<Object> fetchLead(@PathVariable("id") String id) {
+	@GetMapping(value= {"/api/leads" , "/api/leads/{id}"})
+	public ResponseEntity<Object> fetchLead(@PathVariable(required=false, value="id") String id) {
 		try {
+			
 			int leadId = Integer.parseInt(id);
 			java.util.Optional<Lead> lead = leadService.getLead(leadId);
 			if (lead.isPresent()) {
@@ -59,8 +60,8 @@ public class AppController {
 		return new ResponseEntity<>(lead2, HttpStatus.CREATED);
 	}
 	
-	@PutMapping("/api/leads/{id}")
-	public ResponseEntity<Object> updateLead(@PathVariable("id") String id,@Valid @RequestBody Lead lead) {
+	@PutMapping(value= {"/api/leads","/api/leads/{id}"})
+	public ResponseEntity<Object> updateLead(@PathVariable(required=false, value="id") String id,@Valid @RequestBody Lead lead) {
 		try {
 			int leadId = Integer.parseInt(id);
 			if(leadService.checkEmailAlreadyPresent(lead.getEmail())) {
@@ -78,8 +79,8 @@ public class AppController {
 		}
 	}
 	
-	@DeleteMapping("/api/leads/{id}")
-	public ResponseEntity<Object> deleteLead(@PathVariable("id") String id) {
+	@DeleteMapping(value= {"/api/leads","/api/leads/{id}"})
+	public ResponseEntity<Object> deleteLead(@PathVariable(required=false, value="id") String id) {
 		try {
 			int leadId = Integer.parseInt(id);
 			leadService.deleteLead(leadId);
@@ -91,8 +92,8 @@ public class AppController {
 		}
 	}
 	
-	@PutMapping("/api/mark_lead/{id}")
-	public ResponseEntity<ErrorResponseDto> markLead(@PathVariable String id, @Valid @RequestBody MarkModel markModel) {
+	@PutMapping(value= {"/api/mark_lead","/api/mark_lead/{id}"})
+	public ResponseEntity<ErrorResponseDto> markLead(@PathVariable(required=false, value="id") String id, @Valid @RequestBody MarkModel markModel) {
 		try {
 			int leadId = Integer.parseInt(id);
 			leadService.markLeader(leadId, markModel);
