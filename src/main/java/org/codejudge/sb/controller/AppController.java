@@ -59,7 +59,7 @@ public class AppController {
 
 	@PostMapping("/api/leads/")
 	public ResponseEntity<Object> saveLead(@Valid @RequestBody Lead lead) {
-		logger.debug("saving lead "+ lead.toString());
+		System.out.println("saving lead "+ lead.toString());
 		if (lead.getEmail().equals("") || leadService.checkEmailAlreadyPresent(lead.getEmail())) {
 			ErrorResponseDto erd = new ErrorResponseDto("failure", "email error");
 			return new ResponseEntity<>(erd, HttpStatus.BAD_REQUEST);
