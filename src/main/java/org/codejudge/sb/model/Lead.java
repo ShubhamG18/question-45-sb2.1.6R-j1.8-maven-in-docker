@@ -40,7 +40,7 @@ public class Lead {
 	private Long mobile;
 
 	@Column
-	@Email
+	//@Email
 	@NotNull
 	private String email;
 
