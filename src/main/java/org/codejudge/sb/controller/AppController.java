@@ -33,10 +33,10 @@ public class AppController {
 	@Autowired
 	private LeadService leadService;
 
-	@GetMapping(value= {"/api/leads" , "/api/leads/{id}"})
-	public ResponseEntity<Object> fetchLead(@PathVariable(required=false, value="id") String id) {
+	@GetMapping(value = { "/api/leads", "/api/leads/{id}" })
+	public ResponseEntity<Object> fetchLead(@PathVariable(required = false, value = "id") String id) {
 		try {
-			
+
 			int leadId = Integer.parseInt(id);
 			java.util.Optional<Lead> lead = leadService.getLead(leadId);
 			if (lead.isPresent()) {
@@ -49,26 +49,27 @@ public class AppController {
 			return new ResponseEntity<>(erd, HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	@PostMapping("/api/leads/")
 	public ResponseEntity<Object> saveLead(@Valid @RequestBody Lead lead) {
-		if(leadService.checkEmailAlreadyPresent(lead.getEmail())) {
+		if ( lead.getEmail().equals("") || leadService.checkEmailAlreadyPresent(lead.getEmail())) {
 			ErrorResponseDto erd = new ErrorResponseDto("failure", "reason");
 			return new ResponseEntity<>(erd, HttpStatus.BAD_REQUEST);
 		}
 		Lead lead2 = leadService.saveLead(lead);
 		return new ResponseEntity<>(lead2, HttpStatus.CREATED);
 	}
-	
-	@PutMapping(value= {"/api/leads","/api/leads/{id}"})
-	public ResponseEntity<Object> updateLead(@PathVariable(required=false, value="id") String id,@Valid @RequestBody Lead lead) {
+
+	@PutMapping(value = { "/api/leads", "/api/leads/{id}" })
+	public ResponseEntity<Object> updateLead(@PathVariable(required = false, value = "id") String id,
+			@Valid @RequestBody Lead lead) {
 		try {
 			int leadId = Integer.parseInt(id);
-			if(leadService.checkEmailAlreadyPresent(lead.getEmail())) {
+			if (lead.getEmail().equals("") || leadService.checkEmailAlreadyPresent(lead.getEmail())) {
 				ErrorResponseDto erd = new ErrorResponseDto("failure", "reason");
 				return new ResponseEntity<>(erd, HttpStatus.BAD_REQUEST);
 			}
-			Lead updatedLead =new Lead();
+			Lead updatedLead = new Lead();
 			updatedLead.setId(leadId);
 			leadService.saveLead(updatedLead);
 			ErrorResponseDto erd = new ErrorResponseDto("sucesss");
@@ -78,9 +79,9 @@ public class AppController {
 			return new ResponseEntity<>(erd, HttpStatus.BAD_REQUEST);
 		}
 	}
-	
-	@DeleteMapping(value= {"/api/leads","/api/leads/{id}"})
-	public ResponseEntity<Object> deleteLead(@PathVariable(required=false, value="id") String id) {
+
+	@DeleteMapping(value = { "/api/leads", "/api/leads/{id}" })
+	public ResponseEntity<Object> deleteLead(@PathVariable(required = false, value = "id") String id) {
 		try {
 			int leadId = Integer.parseInt(id);
 			leadService.deleteLead(leadId);
@@ -91,9 +92,10 @@ public class AppController {
 			return new ResponseEntity<>(erd, HttpStatus.BAD_REQUEST);
 		}
 	}
-	
-	@PutMapping(value= {"/api/mark_lead","/api/mark_lead/{id}"})
-	public ResponseEntity<ErrorResponseDto> markLead(@PathVariable(required=false, value="id") String id, @Valid @RequestBody MarkModel markModel) {
+
+	@PutMapping(value = { "/api/mark_lead", "/api/mark_lead/{id}" })
+	public ResponseEntity<ErrorResponseDto> markLead(@PathVariable(required = false, value = "id") String id,
+			@Valid @RequestBody MarkModel markModel) {
 		try {
 			int leadId = Integer.parseInt(id);
 			leadService.markLeader(leadId, markModel);

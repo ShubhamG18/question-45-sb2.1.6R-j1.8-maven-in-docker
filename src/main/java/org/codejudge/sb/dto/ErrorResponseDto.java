@@ -11,15 +11,15 @@ public class ErrorResponseDto {
 	private String status;
 	private String reason;
 	private String communication;
+
 	public ErrorResponseDto(String status, String reason) {
 		super();
 		this.status = status;
 		this.reason = reason;
 	}
-	
-	
+
 	public ErrorResponseDto(String status) {
 		this.status = status;
 	}
-	
+
 }
