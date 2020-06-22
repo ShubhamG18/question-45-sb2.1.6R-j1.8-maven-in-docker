@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -28,12 +29,16 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 	 * ErrorResponse("Record Not Found", details); return new ResponseEntity(error,
 	 * HttpStatus.NOT_FOUND); }
 	 */
+	@ExceptionHandler(CustomException.class)
+	public final ResponseEntity<Object> handleUserNotFoundException(CustomException ex, WebRequest request) {
+		ErrorResponseDto error = new ErrorResponseDto("failure", "reason");
+		return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
+	}
 
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
-		
-		System.out.println("exceptionnn "+ex);
+
 		ErrorResponseDto error = new ErrorResponseDto("failure", "reason");
 		return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
 	}

@@ -38,7 +38,6 @@ public class Lead {
 
 	@NotNull
 	@Column
-	@Size(min = 10, max = 10)
 	private Long mobile;
 
 	@Column

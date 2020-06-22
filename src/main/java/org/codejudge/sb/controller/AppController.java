@@ -4,6 +4,7 @@ import javax.validation.Valid;
 
 import org.codejudge.sb.dto.ErrorResponseDto;
 import org.codejudge.sb.dto.MarkModel;
+import org.codejudge.sb.exception.CustomException;
 import org.codejudge.sb.model.Lead;
 import org.codejudge.sb.service.LeadService;
 import org.slf4j.Logger;
@@ -42,7 +43,7 @@ public class AppController {
 	@GetMapping(value = { "/api/leads", "/api/leads/{id}" })
 	public ResponseEntity<Object> fetchLead(@PathVariable(required = false, value = "id") String id) {
 		try {
-
+			
 			int leadId = Integer.parseInt(id);
 			java.util.Optional<Lead> lead = leadService.getLead(leadId);
 			if (lead.isPresent()) {
@@ -58,8 +59,8 @@ public class AppController {
 	}
 
 	@PostMapping("/api/leads/")
-	public ResponseEntity<Object> saveLead(@Valid @RequestBody Lead lead) {
-		logger.debug("saving lead "+ lead.toString());
+	public ResponseEntity<Object> saveLead(@Valid @RequestBody Lead lead) throws CustomException {
+		System.out.println("saving lead "+ lead.toString());
 		if (lead.getEmail().equals("") || leadService.checkEmailAlreadyPresent(lead.getEmail())) {
 			ErrorResponseDto erd = new ErrorResponseDto("failure", "email error");
 			return new ResponseEntity<>(erd, HttpStatus.BAD_REQUEST);
@@ -73,13 +74,7 @@ public class AppController {
 			@Valid @RequestBody Lead lead) {
 		try {
 			int leadId = Integer.parseInt(id);
-			if (lead.getEmail().equals("") || leadService.checkEmailAlreadyPresent(lead.getEmail())) {
-				ErrorResponseDto erd = new ErrorResponseDto("failure", "reason");
-				return new ResponseEntity<>(erd, HttpStatus.BAD_REQUEST);
-			}
-			Lead updatedLead = new Lead();
-			updatedLead.setId(leadId);
-			leadService.saveLead(updatedLead);
+			leadService.updateLead(leadId, lead);
 			ErrorResponseDto erd = new ErrorResponseDto("sucesss");
 			return new ResponseEntity<>(erd, HttpStatus.ACCEPTED);
 		} catch (Exception e) {
