@@ -43,7 +43,7 @@ public class AppController {
 	@GetMapping(value = { "/api/leads", "/api/leads/{id}" })
 	public ResponseEntity<Object> fetchLead(@PathVariable(required = false, value = "id") String id) {
 		try {
-			
+
 			int leadId = Integer.parseInt(id);
 			java.util.Optional<Lead> lead = leadService.getLead(leadId);
 			if (lead.isPresent()) {
@@ -60,7 +60,8 @@ public class AppController {
 
 	@PostMapping("/api/leads/")
 	public ResponseEntity<Object> saveLead(@Valid @RequestBody Lead lead) throws CustomException {
-		System.out.println("saving lead "+ lead.toString());
+
+		System.out.println("saving lead " + lead.toString());
 		if (lead.getEmail().equals("") || leadService.checkEmailAlreadyPresent(lead.getEmail())) {
 			ErrorResponseDto erd = new ErrorResponseDto("failure", "email error");
 			return new ResponseEntity<>(erd, HttpStatus.BAD_REQUEST);
